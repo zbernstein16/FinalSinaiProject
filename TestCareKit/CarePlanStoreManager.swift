@@ -2,7 +2,7 @@
 
 
 import CareKit
-
+import Foundation
 class CarePlanStoreManager: NSObject {
     // MARK: Static Properties
     
@@ -21,7 +21,7 @@ class CarePlanStoreManager: NSObject {
         return insightsBuilder.insights
     }
     
-    //TODO: NEED TO ARCHIVE THIS ARRAY
+    
     
     var activities:[Activity]?
     
@@ -30,10 +30,8 @@ class CarePlanStoreManager: NSObject {
     private override init() {
         
         
-        
-        //WARNING:
-        //TODO:
-        //NEED TO ADD HERE THAT WHENEVER APP STARTS UP, WE ADD ALL THE Activity Objects to this class' array
+       
+        //Whenever app starts up, we add all the activity objects to this class' array.
         // Start to build the initial array of insights.
         
         if let _ = NSKeyedUnarchiver.unarchiveObjectWithFile(Constants.archivePath) as? [Activity]
@@ -44,8 +42,6 @@ class CarePlanStoreManager: NSObject {
         {
             activities = [Activity]()
         }
-        print("Location 1")
-        print(activities)
         
         // Determine the file URL for the store.
         let searchPaths = NSSearchPathForDirectoriesInDomains(.ApplicationSupportDirectory, .UserDomainMask, true)
@@ -78,8 +74,7 @@ class CarePlanStoreManager: NSObject {
     
     func updateInsights() {
         
-        print("Location 2")
-        print(NSKeyedUnarchiver.unarchiveObjectWithFile(Constants.archivePath) as? [Activity])
+       
         
         insightsBuilder.updateInsights { [weak self] completed, newInsights in
             // If new insights have been created, notifiy the delegate, which is main view controller
@@ -88,6 +83,116 @@ class CarePlanStoreManager: NSObject {
             storeManager.delegate?.carePlanStoreManager(storeManager, didUpdateInsights: newInsights)
             
         }
+    }
+    func refreshStore() {
+        
+        
+        //TODO: Need to add so that it deletes activities that are removed from database
+        
+        print("Refresh")
+        //0: For every object
+        //1: Query Patient-Med-Freq Table for all medications this person is taking
+        //2: For each medication, construct the identifier by creating string Med_id/Freq e.g ibuprofen id =1, Freq 3 -> Identifier: 1/3
+        //3: Check if medication already exists  in storewith that identifier
+        //4: If it does not, query through Medication table, tell storeManager to run method with given type of medication and pass argument to add new activity
+        
+        
+        let userId = NSUserDefaults.standardUserDefaults().integerForKey(Constants.userIdKey)
+        
+        let idPredicate = NSPredicate(format:"Patient_id == \(userId)", argumentArray: nil)
+        self.store.activitiesWithCompletion()
+            {
+                success, activities, errorOrNil in
+                if let error = errorOrNil
+                {
+                    print(error.localizedDescription)
+                }
+                else
+                {
+                    for ockactivity in activities
+                    {
+                        let activity = self.activityWithMedId(Int(ockactivity.groupIdentifier!)!)
+                        print("Medication ID")
+                        print(activity!.id)
+                        //Query for each events Med_id
+                        let medIdPredicate = NSPredicate(format:"Med_id == \(activity!.id)", argumentArray: nil)
+                        let compoundPredicate = NSCompoundPredicate.init(andPredicateWithSubpredicates: [idPredicate,medIdPredicate])
+                        self.appDelegate.PatientMedFreqTable!.readWithPredicate(compoundPredicate)
+                        {
+                            results, errorOrNil in
+                            if let error = errorOrNil{
+                                
+                            }
+                            //If no activity is found in the database, remove it from the device
+                            else if results.items.count == 0 {
+                                print("Remove Object")
+                                
+                                //TODO: Remove from archive
+                                self.store.removeActivity(ockactivity, completion: {_,_ in })
+                                //self.activities.remove
+                                
+                            }
+                            
+                        }
+                        //self.store.removeActivity(activity, completion:{_,_ in })
+                    }
+                }
+        }
+        
+        //1
+        self.appDelegate.PatientMedFreqTable!.readWithPredicate(idPredicate)
+        {
+            results, errorOrNil in
+            if let error = errorOrNil{
+                
+                if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
+                    self.delegate?.failedToConnectToInternet()
+                }
+                
+            }
+            else if let results = results
+            {
+                for item in results.items
+                {
+                    let PatMedFreqDict = item as! Dictionary<String,AnyObject>
+                    //2
+                    let identifier = String("\(PatMedFreqDict["Med_id"]!)/\(PatMedFreqDict["Freq"]!)")
+                    
+                    
+                    //3
+                    self.store.activityForIdentifier(identifier) {
+                        success, activity, errorOrNil in
+                        if let error = errorOrNil {
+                            fatalError(error.localizedDescription)
+                        }
+                        if let _ = activity
+                        {
+                            //Activity already exists, do nothing
+                        }
+                        else
+                        {
+                            //Tell Storemanager to handle new activity
+                            self.handleNewMedication(PatMedFreqDict)
+                            
+                        }
+                        
+                    }
+                }
+            }
+            
+        }
+        
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+            
+            self.appDelegate.uploadInformation()
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // update some UI
+            }
+        }
+        
+        
     }
     func handleNewMedication(PatMedFreqDictionary:Dictionary<String,AnyObject>)
     {
@@ -129,6 +234,7 @@ class CarePlanStoreManager: NSObject {
                                                     
                                                     self.activities!.append(drug)
                                                     NSKeyedArchiver.archiveRootObject(self.activities!, toFile:Constants.archivePath)
+                                                    self.createNotification(activityDictionary: PatMedFreqDictionary , activity: drug)
                                                 }
                             }
                         case "PainScale":
@@ -143,6 +249,7 @@ class CarePlanStoreManager: NSObject {
                                             {
                                                 self.activities!.append(painScale)
                                                 NSKeyedArchiver.archiveRootObject(self.activities!, toFile:Constants.archivePath)
+                                                self.createNotification(activityDictionary:PatMedFreqDictionary, activity: painScale)
                                             }
                             }
                         default:
@@ -154,13 +261,59 @@ class CarePlanStoreManager: NSObject {
         }
         
     }
+    func createNotification(activityDictionary activityDict:Dictionary<String,AnyObject>, activity:Activity)
+    {
+        
+        loop: for i in 1...activity.freq
+        {
+            let notification = UILocalNotification()
+            
+            inner: switch activity
+            {
+            case is Drug:
+                let drug = activity as! Drug
+                notification.alertBody = "Time to take your \(drug.drugName)"
+            case is PainScale:
+                let scale = activity as! PainScale
+                notification.alertBody = "Time to measure your \(scale.typeOfPain)"
+            default:
+                break inner
+            }
+
+            notification.alertTitle = "Medication alert"
+
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            let timeColumnString = "Time_" + String(i)
+            guard let time = activityDict[timeColumnString] else { continue loop }
+            guard let timeString = time as? String else { continue loop }
+            guard let fireDate = dateFormatter.dateFromString(timeString) else { continue loop }
+            notification.fireDate = fireDate
+            notification.repeatInterval = NSCalendarUnit.Day
+            notification.soundName = UILocalNotificationDefaultSoundName // play default sound
+            notification.timeZone = NSTimeZone.systemTimeZone()
+            notification.category = "alert"
+            UIApplication.sharedApplication().scheduleLocalNotification(notification)
+            
+        }
+      
+    }
+    
+//MARK: Convenience
+    
+    func activityWithMedId(id:Int) -> Activity?
+    {
+        let activity = self.activities!.filter({ $0.id == id })
+        return activity.first
+    }
     func activityWithType(type: ActivityType) -> Activity? {
         for activity in activities! where activity.activityType == type {
-           return activity
+            return activity
         }
         
         return nil
     }
+
     
 }
 
@@ -181,5 +334,6 @@ extension CarePlanStoreManager: OCKCarePlanStoreDelegate {
 protocol CarePlanStoreManagerDelegate: class {
     
     func carePlanStoreManager(manager: CarePlanStoreManager, didUpdateInsights insights: [OCKInsightItem])
+    func failedToConnectToInternet()
     
 }

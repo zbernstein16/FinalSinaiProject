@@ -7,7 +7,9 @@
 
 import UIKit
 import ResearchKit
-
+/*
+ If the user opens the app for the first time, this ViewController will present the survey to signup. However, if the user has already completed the survey, it will navigate right to the main app.
+*/
 class ConsentViewController: UIViewController {
     
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -28,6 +30,7 @@ class ConsentViewController: UIViewController {
             }
             else
             {
+                UIApplication.sharedApplication().scheduledLocalNotifications?.removeAll()
                 let taskViewController = ORKTaskViewController(task: ConsentTask, taskRunUUID: nil)
                 taskViewController.delegate = self
                 self.navigationController!.pushViewController(taskViewController, animated: true)
@@ -118,6 +121,11 @@ extension ConsentViewController : ORKTaskViewControllerDelegate {
                             alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
                             self.presentViewController(alert, animated: true){}
                         }
+                        else {
+                            let alert = UIAlertController(title: "Error", message:"Try again later", preferredStyle: .Alert)
+                            alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+                            self.presentViewController(alert, animated: true){}
+                    }
             
                 } else if let item = result {
                     self.view.userInteractionEnabled = true

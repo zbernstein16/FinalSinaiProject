@@ -34,7 +34,6 @@
 		CEFF46251CE306E900C7CCEB /* NameSurvey.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46141CE306E900C7CCEB /* NameSurvey.swift */; };
 		CEFF46261CE306E900C7CCEB /* NSCalendar+Dates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46151CE306E900C7CCEB /* NSCalendar+Dates.swift */; };
 		CEFF46271CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46161CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift */; };
-		CEFF46281CE306E900C7CCEB /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46171CE306E900C7CCEB /* SampleData.swift */; };
 		CEFF46291CE306E900C7CCEB /* TakeMedication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46181CE306E900C7CCEB /* TakeMedication.swift */; };
 		CEFF462A1CE306E900C7CCEB /* Tower.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46191CE306E900C7CCEB /* Tower.swift */; };
 		CEFF463F1CE307AF00C7CCEB /* CareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFF463C1CE3078900C7CCEB /* CareKit.framework */; };
@@ -137,7 +136,6 @@
 		CEFF46141CE306E900C7CCEB /* NameSurvey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameSurvey.swift; sourceTree = "<group>"; };
 		CEFF46151CE306E900C7CCEB /* NSCalendar+Dates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Dates.swift"; sourceTree = "<group>"; };
 		CEFF46161CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCKInsightItem+EmptyMessage.swift"; sourceTree = "<group>"; };
-		CEFF46171CE306E900C7CCEB /* SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		CEFF46181CE306E900C7CCEB /* TakeMedication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TakeMedication.swift; sourceTree = "<group>"; };
 		CEFF46191CE306E900C7CCEB /* Tower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tower.swift; sourceTree = "<group>"; };
 		CEFF462B1CE3077600C7CCEB /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ResearchKit.xcodeproj; path = "../../../Downloads/ResearchKit-master 3/ResearchKit.xcodeproj"; sourceTree = "<group>"; };
@@ -267,7 +265,6 @@
 		CEFF464A1CE3090E00C7CCEB /* CareKit Model */ = {
 			isa = PBXGroup;
 			children = (
-				CEFF46171CE306E900C7CCEB /* SampleData.swift */,
 				CEFF460D1CE306E900C7CCEB /* CarePlanStoreManager.swift */,
 				CEFF460A1CE306E800C7CCEB /* Assessment.swift */,
 				CEFF46091CE306E800C7CCEB /* Activity.swift */,
@@ -350,9 +347,13 @@
 				TargetAttributes = {
 					A2D9CBBD1943C2540017F096 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = H4HWZ3MZ9U;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 0;
 							};
 						};
 					};
@@ -469,7 +470,6 @@
 				CEA71BDF1CE6C59800A4BAEF /* ConsentDocument.swift in Sources */,
 				CEFF46241CE306E900C7CCEB /* MainViewController.swift in Sources */,
 				CE052B881CF363340041D88F /* PainScale.swift in Sources */,
-				CEFF46281CE306E900C7CCEB /* SampleData.swift in Sources */,
 				CEFF46251CE306E900C7CCEB /* NameSurvey.swift in Sources */,
 				CE06D5A61CE6235B00BB233D /* ConsentTask.swift in Sources */,
 				CEFF46261CE306E900C7CCEB /* NSCalendar+Dates.swift in Sources */,

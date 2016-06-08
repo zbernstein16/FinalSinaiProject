@@ -1,30 +1,31 @@
-// ----------------------------------------------------------------------------
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// ----------------------------------------------------------------------------
+//  Sinai App
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+//  Created by Zachary Bernstein on 5/23/16.
+//  Copyright © 2016 Zachary Bernstein. All rights reserved.
+
+
 import UIKit
 import CareKit
 import MobileCoreServices
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
  
+    
+    /*
+
+        These variables are needed to upload to Azure. They will be initialized within ConsentViewController.swift, if they are not initialized by then they will be initialized in ApplicationDidFinishLaunching
+     
+     
+    */
+    
     var client:MSClient?
     var adherenceTable:MSTable?
     var patientTable:MSTable?
     var PatientMedFreqTable:MSTable?
     var medicationTable:MSTable?
     var backgroundTask: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    
+    
     
     var window: UIWindow?
   
@@ -34,60 +35,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //MARK: Azure Methods
     
-    //Every time user opens app for first time, or app enters background, or whenever background fetch occurs, this will query through all the health data for the past few days and upload to Azure through MSClient API
+  
+    /**
+ 
+        Every time user opens app for first time, or app enters background, or whenever background fetch occurs, this will query through all the health data for the day and upload to Azure through MSClient API
+    */
     func uploadInformation() {
         
         
         //UPDATE WILL ONLY FIRE IF USER HAS COMPLETED SURVEY. I.E HAS NAVIGATED TO MAIN VIEW CONTROLLER AND REGISTERD FOR UPDATE NOTIFICATION
             if NSUserDefaults.standardUserDefaults().boolForKey("surveyCompleted") == true
-            {
-                //This allows uploads to occur in the background
-               
-                
-                
-             
-               
-                
+                {
                     self.uploadAssessmentData()
                     self.uploadInterventionData()
-    
-
-                
-
-
-                    
-                    
-                    
-                    
                 }
-        
-                
-                
-                
-                
         }
-        
-        
-    func testUpload()
-    {
-//        let storeManager = CarePlanStoreManager.sharedCarePlanStoreManager
-//        storeManager.store.activitiesWithCompletion()
-//            {
-//                success, activities, errorOrNil in
-//                if let error = errorOrNil
-//                {
-//                    print("FAILED TO UPLOAD")
-//                }
-//                for activity in activities
-//                {
-//                    storeManager.store.eventsForActivity(<#T##activity: OCKCarePlanActivity##OCKCarePlanActivity#>, date: <#T##NSDateComponents#>, completion: <#T##([OCKCarePlanEvent], NSError?) -> Void#>)
-//                }
-//        }
-    }
+    /**
+ 
+     Uploads specifically intervention Data (i.e Care Card events)
+ 
+    */
     func uploadInterventionData()
     {
+        //Runs Task for short period of time in background if user closes app.
         registerBackgroundTask()
         let storeManager = CarePlanStoreManager.sharedCarePlanStoreManager
+        
+        //Queries through Care Card events
         storeManager.store.eventsOnDate(NSDate().dateComponents(), type: .Intervention) { activities, errorOrNil in
             for activity in activities
             {
@@ -111,17 +85,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 (result, errorOrNil) in
                 if let error = errorOrNil
                 {
-                    print("LOCATION 1")
                     print("ERROR:",error)
                     
                 }
                 else
                 {
+                    //Create new post
                     var newAdherencePost:[String:AnyObject] = ["Patient_id":NSUserDefaults.standardUserDefaults().integerForKey(Constants.userIdKey),
                         "Med_id":medId,
                         "Date":date
                     ]
                     var i:Int! = 1
+                    
+                    //Add time and status for each dosage of the day
                     for event in activity
                     {
                         
@@ -145,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         
                     }
                     
-                    
+                    //If object already existed, update it
                     if let item = result.items.first
                     {
                         var newItem = item.mutableCopy() as! Dictionary<String,AnyObject>
@@ -162,7 +138,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         {
                             (results, error) in
                             if let err = error {
-                                print("LOCATION 2")
                                 print("ERROR",err)
                             }
                             else
@@ -182,7 +157,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             (results, err2) in
                             if let error = err2
                             {
-                                print("LOCATION 3")
                                 print("ERROR",error)
                             }
                             else
@@ -204,10 +178,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
     }
+    /**
+     
+     Uploads specifically assessment Data (i.e Symptom Tracker events, e.g Pain Scale). See above for comments.
+     
+     */
     func uploadAssessmentData()
     {
+        
+        //Runs Task for short period of time in background if user closes app.
         registerBackgroundTask()
         let storeManager = CarePlanStoreManager.sharedCarePlanStoreManager
+        
+        //Queries through Symptom tracker events
         storeManager.store.eventsOnDate(NSDate().dateComponents(), type:.Assessment) { activities, errorOrNil in
             for activity in activities
             {
@@ -326,10 +309,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
         }
     }
-
+//MARK: Background Methods
+    /**
+        Background fetch upload once in a while
+    */
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         uploadInformation()
     }
+    /**
+        Called whenever background task should occur
+    */
     func registerBackgroundTask() {
         backgroundTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler {
             [unowned self] in
@@ -346,11 +335,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //MARK: Normal Methods
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
 
-        client = MSClient(applicationURLString:"https://zachservice.azure-mobile.net/")
-        adherenceTable = client!.tableWithName("Adherence")
-        patientTable = client!.tableWithName("Patient")
-        PatientMedFreqTable = client!.tableWithName("Patient_Med_Freq")
-        medicationTable = client!.tableWithName("Medication")
+        
+        //REQUIRED FOR NOTIFICATIONS TO SHOW UP
+        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes:[.Alert, .Badge, .Sound], categories: nil))  // types are UIUserNotificationType members
+        
+ 
+        guard let _ = self.client, let _ = self.adherenceTable, let _ = self.patientTable, let _ = self.PatientMedFreqTable, let _ = self.medicationTable else {
+            client = MSClient(applicationURLString:"https://zachservice.azure-mobile.net/")
+            adherenceTable = client!.tableWithName("Adherence")
+            patientTable = client!.tableWithName("Patient")
+            PatientMedFreqTable = client!.tableWithName("Patient_Med_Freq")
+            medicationTable = client!.tableWithName("Medication")
+            return true
+        }
         
         
         //Updates store in background every 12 hours
@@ -362,9 +359,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
        
-        //REQUIRED FOR NOTIFICATIONS TO SHOW UP
-        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes:[.Alert, .Badge, .Sound], categories: nil))  // types are UIUserNotificationType members
-        
         
         uploadInformation()
         

@@ -9,6 +9,8 @@
 import CareKit
 class Activity:NSObject, ActivityProtocol
 {
+    var freq:Int!
+    var id:Int!
     override init()
     {
         self.activityType = .Blank

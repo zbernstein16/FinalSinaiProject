@@ -13,8 +13,6 @@ class Drug:Activity, NSCoding {
 
     var drugName: String!
     var startDate:NSDateComponents!
-    var freq:Int!
-    var id:Int!
     init(withName name:String,start:NSDate,occurences:Int, medId:Int)
     {
         super.init()
@@ -31,7 +29,7 @@ class Drug:Activity, NSCoding {
         
         let schedule = OCKCareSchedule.dailyScheduleWithStartDate(startDate, occurrencesPerDay:UInt(freq))
         let identifier = String("\(id)/\(freq)")
-        return OCKCarePlanActivity.interventionWithIdentifier(identifier, groupIdentifier:ActivityType.Drug.rawValue, title: drugName, text: nil, tintColor: UIColor.redColor(), instructions: "Take \(freq) time(s) a day", imageURL: nil, schedule: schedule, userInfo: nil)
+        return OCKCarePlanActivity.interventionWithIdentifier(identifier, groupIdentifier:String(self.id), title: drugName, text: nil, tintColor: UIColor.redColor(), instructions: "Take \(freq) time(s) a day", imageURL: nil, schedule: schedule, userInfo: nil)
     }
     
     
@@ -46,6 +44,7 @@ class Drug:Activity, NSCoding {
         self.init(withName: drugName, start: NSDate.dateFromComponents(startDate), occurences: freq, medId: id)
         
     }
+    
     
     func encodeWithCoder(coder: NSCoder) {
         coder.encodeObject(self.drugName, forKey: "drugName")
