@@ -144,6 +144,7 @@ class MainViewController: UITabBarController, OCKCarePlanStoreDelegate {
     func refresh()
     {
         self.storeManager.refreshStore()
+        self.setViewControllers();
     }
     /*
  

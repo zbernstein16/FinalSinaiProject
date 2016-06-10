@@ -72,10 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let date:String = NSDate.dateFromComponents(activity.first!.date).monthDayYearString()
             
             
-                for event in activity
-                {
-                 print("Time: \(NSDate.dateFromComponents(event.date).hourMinutesString())")
-                }
+               
             
             //Query to see if post already exists for that day
             let medIdPredicate = NSPredicate(format:"Med_id == \(medId)")
@@ -119,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         let statusString = "Status_" + String(i)
                         let timeString = "Time_" + String(i)
                         newAdherencePost[statusString] = result
-                        newAdherencePost[timeString] = ""
+                        newAdherencePost[timeString] = event.timeDate.hourMinutesString()
                         
                         i = i+1
                         
@@ -232,8 +229,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         for event in activity
                         {
                             
-                            let time = NSDate.dateFromComponents(event.date).hourMinutesString()
-                            
                             var result:String?
                             if let eventResult = event.result {
                                 result = eventResult.valueString
@@ -248,7 +243,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             let statusString = "Status_" + String(i)
                             let timeString = "Time_" + String(i)
                             newAdherencePost[statusString] = result
-                            newAdherencePost[timeString] = time
+                            newAdherencePost[timeString] = event.timeDate.hourMinutesString()
                             
                             i = i+1
                             
