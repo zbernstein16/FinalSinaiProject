@@ -54,3 +54,36 @@ extension NSDate {
     }
 
 }
+
+//When processign Pat_Med_Freq dict, if the dictionary contains a schedule, we want to change it from a string into an NSNUmber array to be processed by an Activity subclass. Starts Sunday, ends saturday
+extension String
+{
+    func toScheduleArray() -> [NSNumber]?
+    {
+       let stringArray = self.componentsSeparatedByString("/")
+        var success:Bool = true
+        let intArray:[NSNumber] = stringArray.map({ val in
+                if let int = Int(val) where int >= 0
+                {
+                   return NSNumber(integer:int)
+                }
+                else
+                {
+                    success = false
+                    return 0
+                }
+        })
+        if success && intArray.count == 7
+        {
+            return intArray;
+        }
+        else
+        {
+            return nil
+        }
+        
+     
+        
+        
+    }
+}

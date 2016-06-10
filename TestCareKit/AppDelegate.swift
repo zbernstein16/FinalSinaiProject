@@ -72,7 +72,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let date:String = NSDate.dateFromComponents(activity.first!.date).monthDayYearString()
             
             
-            
+                for event in activity
+                {
+                 print("Time: \(NSDate.dateFromComponents(event.date).hourMinutesString())")
+                }
             
             //Query to see if post already exists for that day
             let medIdPredicate = NSPredicate(format:"Med_id == \(medId)")
@@ -100,8 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     //Add time and status for each dosage of the day
                     for event in activity
                     {
-                        
-                        let time = NSDate.dateFromComponents(event.date).hourMinutesString()
+                        print("Creation Date")
+                        //TODO: Need to get Time they took dosage
+
                         
                         var result:String!
                         switch event.state.rawValue
@@ -115,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         let statusString = "Status_" + String(i)
                         let timeString = "Time_" + String(i)
                         newAdherencePost[statusString] = result
-                        newAdherencePost[timeString] = time
+                        newAdherencePost[timeString] = ""
                         
                         i = i+1
                         

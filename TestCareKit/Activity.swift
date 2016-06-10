@@ -11,6 +11,17 @@ class Activity:NSObject, ActivityProtocol
 {
     var freq:Int!
     var id:Int!
+    //Schedule String will come in as "_/_/_/_/_/_/_"
+    var scheduleFreqString:String?
+    
+    //Computer property will return array of NSNumbers only if in right format
+    var scheduleFreqArray:[NSNumber]? {
+        guard let scheduleFreqString = scheduleFreqString,
+        let array = scheduleFreqString.toScheduleArray()
+        else { return nil }
+        
+        return array;
+    }
     override init()
     {
         self.activityType = .Blank

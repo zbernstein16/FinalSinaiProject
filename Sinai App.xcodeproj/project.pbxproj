@@ -32,7 +32,7 @@
 		CEFF46231CE306E900C7CCEB /* InsightsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46121CE306E900C7CCEB /* InsightsBuilder.swift */; };
 		CEFF46241CE306E900C7CCEB /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46131CE306E900C7CCEB /* MainViewController.swift */; };
 		CEFF46251CE306E900C7CCEB /* NameSurvey.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46141CE306E900C7CCEB /* NameSurvey.swift */; };
-		CEFF46261CE306E900C7CCEB /* NSCalendar+Dates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46151CE306E900C7CCEB /* NSCalendar+Dates.swift */; };
+		CEFF46261CE306E900C7CCEB /* CustomExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46151CE306E900C7CCEB /* CustomExtensions.swift */; };
 		CEFF46271CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46161CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift */; };
 		CEFF46291CE306E900C7CCEB /* TakeMedication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46181CE306E900C7CCEB /* TakeMedication.swift */; };
 		CEFF462A1CE306E900C7CCEB /* Tower.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46191CE306E900C7CCEB /* Tower.swift */; };
@@ -134,7 +134,7 @@
 		CEFF46121CE306E900C7CCEB /* InsightsBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsightsBuilder.swift; sourceTree = "<group>"; };
 		CEFF46131CE306E900C7CCEB /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		CEFF46141CE306E900C7CCEB /* NameSurvey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameSurvey.swift; sourceTree = "<group>"; };
-		CEFF46151CE306E900C7CCEB /* NSCalendar+Dates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCalendar+Dates.swift"; sourceTree = "<group>"; };
+		CEFF46151CE306E900C7CCEB /* CustomExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomExtensions.swift; sourceTree = "<group>"; };
 		CEFF46161CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCKInsightItem+EmptyMessage.swift"; sourceTree = "<group>"; };
 		CEFF46181CE306E900C7CCEB /* TakeMedication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TakeMedication.swift; sourceTree = "<group>"; };
 		CEFF46191CE306E900C7CCEB /* Tower.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tower.swift; sourceTree = "<group>"; };
@@ -293,7 +293,7 @@
 				CEFF46121CE306E900C7CCEB /* InsightsBuilder.swift */,
 				CEFF46481CE308C000C7CCEB /* QueryActivityEventsOperation.swift */,
 				CEFF46161CE306E900C7CCEB /* OCKInsightItem+EmptyMessage.swift */,
-				CEFF46151CE306E900C7CCEB /* NSCalendar+Dates.swift */,
+				CEFF46151CE306E900C7CCEB /* CustomExtensions.swift */,
 			);
 			name = Insights;
 			sourceTree = "<group>";
@@ -472,7 +472,7 @@
 				CE052B881CF363340041D88F /* PainScale.swift in Sources */,
 				CEFF46251CE306E900C7CCEB /* NameSurvey.swift in Sources */,
 				CE06D5A61CE6235B00BB233D /* ConsentTask.swift in Sources */,
-				CEFF46261CE306E900C7CCEB /* NSCalendar+Dates.swift in Sources */,
+				CEFF46261CE306E900C7CCEB /* CustomExtensions.swift in Sources */,
 				CEFF46491CE308C000C7CCEB /* QueryActivityEventsOperation.swift in Sources */,
 				CEFF461B1CE306E900C7CCEB /* Assessment.swift in Sources */,
 				CEFF46221CE306E900C7CCEB /* docViewController.swift in Sources */,

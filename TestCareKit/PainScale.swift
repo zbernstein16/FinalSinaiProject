@@ -35,7 +35,7 @@ class PainScale:Assessment, NSCoding {
          let identifier = String("\(id)/\(freq)")
         let activity = OCKCarePlanActivity.assessmentWithIdentifier(
             identifier,
-            groupIdentifier:activityType.rawValue,
+            groupIdentifier:String(self.id),
             title: title,
             text: summary,
             tintColor: UIColor.blueColor(),

@@ -127,7 +127,7 @@ class MainViewController: UITabBarController, OCKCarePlanStoreDelegate {
     func createInsightsViewController () -> OCKInsightsViewController {
         let headerTitle = NSLocalizedString("Weekly Charts", comment: "")
         let viewController = OCKInsightsViewController(insightItems: storeManager.insights, headerTitle: headerTitle, headerSubtitle: "")
-         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Insert", style: .Plain, target: self, action: #selector(insertActivity))
+         //viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Insert", style: .Plain, target: self, action: #selector(insertActivity))
         // Setup the controller's title and tab bar item
         viewController.title = NSLocalizedString("Insights", comment: "")
         viewController.tabBarItem = UITabBarItem(title: viewController.title, image: UIImage(named:"insights"), selectedImage: UIImage(named: "insights-filled"))
@@ -217,27 +217,11 @@ extension MainViewController: CarePlanStoreManagerDelegate {
 extension MainViewController:OCKCareCardViewControllerDelegate
 {
     func careCardViewController(viewController: OCKCareCardViewController, didSelectButtonWithInterventionEvent interventionEvent: OCKCarePlanEvent) {
+
         
-        
-        //This prints initial value. If initial value is 0 or 1, this means the event was just completed.
-        //0:Initial 1:Not completed -> Completed
-        //2 -> Just unfilled
-  
-//        let components = interventionEvent.date // local date time: Jun 27, 2014, 9:32 AM
-//        let dateString = String(components.month) + "/" + String(components.day) + "/" + String(components.year)
-//        let index = interventionEvent.occurrenceIndexOfDay
-//        var eventResult:String!
-//        switch interventionEvent.state.rawValue {
-//        case 0 | 1:
-//            eventResult = "Completed"
-//        default:
-//            eventResult = "Not-Completed"
-//        }
-       
+        //HERE IS WHERE LIVE SYNC COULD OCCUR
     }
-
 }
-
 //MARK: Symptom Tracker Extension
 /*
  
@@ -250,8 +234,8 @@ extension MainViewController: OCKSymptomTrackerViewControllerDelegate
         
         // Lookup the assessment the row represents.
         print("Location 1")
-        guard let activityType = ActivityType(rawValue: assessmentEvent.activity.groupIdentifier!) else { return }
-        guard let sampleAssessment = storeManager.activityWithType(activityType) as? Assessment else { return }
+        //guard let activityType = ActivityType(rawValue: assessmentEvent.activity.groupIdentifier!) else { return }
+        guard let sampleAssessment = storeManager.activityWithMedId(Int(assessmentEvent.activity.groupIdentifier!)!)! as? Assessment else { return }
         /*
          Check if we should show a task for the selected assessment event
          based on its state.
@@ -287,11 +271,12 @@ extension MainViewController: ORKTaskViewControllerDelegate
         
         // Determine the event that was completed and the `SampleAssessment` it represents.
         guard let event = symptomTrackerViewController.lastSelectedAssessmentEvent,
-            activityType = ActivityType(rawValue: event.activity.groupIdentifier!),
-            sampleAssessment = storeManager.activityWithType(activityType) as? Assessment else { return }
+            let assessment = storeManager.activityWithMedId(Int(event.activity.groupIdentifier!)!) as? Assessment
+        else { return }
         
         // Build an `OCKCarePlanEventResult` that can be saved into the `OCKCarePlanStore`.
-        let carePlanResult = sampleAssessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
+        let carePlanResult = assessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
+        //let carePlanResult = sampleAssessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
         self.completeEvent(event, inStore: self.storeManager.store, withResult: carePlanResult)
         
         

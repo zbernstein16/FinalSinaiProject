@@ -87,10 +87,9 @@ class CarePlanStoreManager: NSObject {
     func refreshStore() {
         
         
-        //TODO: Need to add so that it deletes activities that are removed from database
         
-        print("Refresh")
-        //0: For every object
+        
+        //0: For every object, query through Pat-Med-Freq table to see if it still exists. If it does not, remove it from device.
         //1: Query Patient-Med-Freq Table for all medications this person is taking
         //2: For each medication, construct the identifier by creating string Med_id/Freq e.g ibuprofen id =1, Freq 3 -> Identifier: 1/3
         //3: Check if medication already exists  in storewith that identifier
@@ -99,36 +98,35 @@ class CarePlanStoreManager: NSObject {
         
         let userId = NSUserDefaults.standardUserDefaults().integerForKey(Constants.userIdKey)
         
+        //0
         let idPredicate = NSPredicate(format:"Patient_id == \(userId)", argumentArray: nil)
         self.store.activitiesWithCompletion()
             {
-                success, activities, errorOrNil in
+                success, ockactivities, errorOrNil in
                 if let error = errorOrNil
                 {
                     print(error.localizedDescription)
                 }
                 else
                 {
-                    for ockactivity in activities
+                    for ockactivity in ockactivities
                     {
                         let activity = self.activityWithMedId(Int(ockactivity.groupIdentifier!)!)
-                        print("Medication ID")
-                        print(activity!.id)
                         //Query for each events Med_id
                         let medIdPredicate = NSPredicate(format:"Med_id == \(activity!.id)", argumentArray: nil)
                         let compoundPredicate = NSCompoundPredicate.init(andPredicateWithSubpredicates: [idPredicate,medIdPredicate])
                         self.appDelegate.PatientMedFreqTable!.readWithPredicate(compoundPredicate)
                         {
                             results, errorOrNil in
-                            if let error = errorOrNil{
-                                
+                            if let _ = errorOrNil{
+                                self.delegate!.failedToConnectToInternet()
                             }
                             //If no activity is found in the database, remove it from the device
                             else if results.items.count == 0 {
-                                print("Remove Object")
-                                
-                                //TODO: Remove from archive
+        
                                 self.store.removeActivity(ockactivity, completion: {_,_ in })
+                                self.activities?.removeAtIndex(self.activities!.indexOf(activity!)!)
+                                NSKeyedArchiver.archiveRootObject((self.activities!), toFile:Constants.archivePath)
                                 //self.activities.remove
                                 
                             }
@@ -201,6 +199,8 @@ class CarePlanStoreManager: NSObject {
         let medId:Int = PatMedFreqDictionary["Med_id"] as! Int
         let freq:Int = PatMedFreqDictionary["Freq"] as! Int
         let startDate:NSDate = PatMedFreqDictionary["Start_Date"] as! NSDate
+        //TODO: Make sure this has right column name
+        let scheduleFreqString:String? = PatMedFreqDictionary["Schedule_Freq"] as! String?
         
         
         //4: Query through Med table with MedId to get all events with that Id
@@ -222,7 +222,7 @@ class CarePlanStoreManager: NSObject {
                     //TODO: Add more types here 
                     switch type {
                         case "Drug":
-                           let drug = Drug(withName: name, start: startDate, occurences: freq, medId:medId)
+                           let drug = Drug(withName: name, start: startDate, occurences: freq, medId:medId, scheduleFreqString: scheduleFreqString)
                            self.store.addActivity(drug.carePlanActivity()) {
                                                 success, errorOrNil in
                                                 if let error = errorOrNil
@@ -261,6 +261,12 @@ class CarePlanStoreManager: NSObject {
         }
         
     }
+    
+    /**
+ 
+        For every new activity added to the device, this will create a notification at the given times in the Patient-Med-Frequency table. (Columns "Time_1", "Time_2", and "Time_3")
+ 
+    */
     func createNotification(activityDictionary activityDict:Dictionary<String,AnyObject>, activity:Activity)
     {
         

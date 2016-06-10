@@ -107,43 +107,126 @@ extension ConsentViewController : ORKTaskViewControllerDelegate {
             presentViewController(alert, animated: true, completion: nil)
             self.view.userInteractionEnabled = false
             
-            let newPatient:Dictionary<String,AnyObject> = ["First_Name":firstName,"Last_Name":lastName,"Date_Of_Birth":dateString]
-            appDelegate.patientTable!.insert(newPatient) { (result, errorOrNil) in
-                if let error = errorOrNil {
-                    
-                    self.view.userInteractionEnabled = true
-                    self.dismissViewControllerAnimated(false, completion: nil)
-                    print("Error",error)
-                    print("ERROR CODE: " + String(error.code))
-                    
-                        if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
-                            let alert = UIAlertController(title: "Error", message:"Not Connected To Internet", preferredStyle: .Alert)
-                            alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
-                            self.presentViewController(alert, animated: true){}
-                        }
-                        else {
-                            let alert = UIAlertController(title: "Error", message:"Try again later", preferredStyle: .Alert)
-                            alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
-                            self.presentViewController(alert, animated: true){}
-                    }
+            //let newPatient:Dictionary<String,AnyObject> = ["First_Name":firstName,"Last_Name":lastName,"Date_Of_Birth":dateString]
             
-                } else if let item = result {
-                    self.view.userInteractionEnabled = true
-                    self.dismissViewControllerAnimated(false, completion: nil)
-                    
-                NSUserDefaults.standardUserDefaults().setInteger(item["id"] as! Int, forKey: Constants.userIdKey)
-                    //ONCE SURVEY COMPLETED, AND USER CREATED, NAVIGATE TO MAIN APP
-                    self.navigationController!.popViewControllerAnimated(false)
-                    self.performSegueWithIdentifier("toMain", sender: nil)
+            
+
+            let firstNamePredicate = NSPredicate(format: "First_Name == \(firstName)")
+            let lastNamePredicate = NSPredicate(format: "Last_Name == \(lastName)")
+            let dateOfBirthPredicate = NSPredicate(format: "Date_Of_Birth == '\(dateString)'")
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [firstNamePredicate,lastNamePredicate,dateOfBirthPredicate])
+            
+            let query = appDelegate.patientTable!.queryWithPredicate(compoundPredicate)
+            query.readWithCompletion()
+            {
+              (result, errorOrNil) in
+                if let error = errorOrNil
+                {
+                    if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
+                        let alert = UIAlertController(title: "Error", message:"Not Connected To Internet", preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+                        self.presentViewController(alert, animated: true){}
+                    }
+                    else {
+                        let alert = UIAlertController(title: "Error", message:"Try again later", preferredStyle: .Alert)
+                        alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+                        self.presentViewController(alert, animated: true){}
+                        
+                    }
                 }
+                else
+                {
+                    
+                    //Previous account already found
+                    if let item = result.items.first
+                    {
+                        NSUserDefaults.standardUserDefaults().setInteger(item["id"] as! Int, forKey: Constants.userIdKey)
+                        print("Patient ID: \(item["id"])")
+                        self.view.userInteractionEnabled = true
+                        self.dismissViewControllerAnimated(false, completion: nil)
+                        
+                        
+                    }
+                    else
+                    {
+                        //Create New patient
+                        let newPatient:Dictionary<String,AnyObject> = ["First_Name":firstName,"Last_Name":lastName,"Date_Of_Birth":dateString]
+                        self.appDelegate.patientTable!.insert(newPatient) {
+                            (res, errOrNil) in
+                            if let error = errOrNil {
+                                
+                                self.view.userInteractionEnabled = true
+                                self.dismissViewControllerAnimated(false, completion: nil)
+                                print("Error",error)
+                                print("ERROR CODE: " + String(error.code))
+                                
+                                if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
+                                    let alert = UIAlertController(title: "Error", message:"Not Connected To Internet", preferredStyle: .Alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+                                    self.presentViewController(alert, animated: true){}
+                                }
+                                else {
+                                    let alert = UIAlertController(title: "Error", message:"Try again later", preferredStyle: .Alert)
+                                    alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+                                    self.presentViewController(alert, animated: true){}
+                                }
+                                
+                            }
+                            else if let it = res
+                            {
+                                self.view.userInteractionEnabled = true
+                                self.dismissViewControllerAnimated(false, completion: nil)
+                                NSUserDefaults.standardUserDefaults().setInteger(it["id"] as! Int, forKey: Constants.userIdKey)
+                                //ONCE SURVEY COMPLETED, AND USER CREATED, NAVIGATE TO MAIN APP
+                                self.navigationController!.popViewControllerAnimated(false)
+                                self.performSegueWithIdentifier("toMain", sender: nil)
+                                print("Patient ID: \(it["id"])")
+
+                            }
+                            
+                        }
+
+                }
+                
             }
+                
+//                appDelegate.patientTable!.insert(newPatient) { (result, errorOrNil) in
+//                if let error = errorOrNil {
+//                    
+//                    self.view.userInteractionEnabled = true
+//                    self.dismissViewControllerAnimated(false, completion: nil)
+//                    print("Error",error)
+//                    print("ERROR CODE: " + String(error.code))
+//                    
+//                        if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
+//                            let alert = UIAlertController(title: "Error", message:"Not Connected To Internet", preferredStyle: .Alert)
+//                            alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+//                            self.presentViewController(alert, animated: true){}
+//                        }
+//                        else {
+//                            let alert = UIAlertController(title: "Error", message:"Try again later", preferredStyle: .Alert)
+//                            alert.addAction(UIAlertAction(title: "Okay", style: .Default) { _ in })
+//                            self.presentViewController(alert, animated: true){}
+//                        }
+//            
+//                } else if let item = result {
+//                    self.view.userInteractionEnabled = true
+//                    self.dismissViewControllerAnimated(false, completion: nil)
+//                    print("Patient It")
+//                    print(item["id"] as! Int)
+//                NSUserDefaults.standardUserDefaults().setInteger(item["id"] as! Int, forKey: Constants.userIdKey)
+//                    //ONCE SURVEY COMPLETED, AND USER CREATED, NAVIGATE TO MAIN APP
+//                    self.navigationController!.popViewControllerAnimated(false)
+//                    self.performSegueWithIdentifier("toMain", sender: nil)
+//                }
+//                }
             
             
                     
             
            
             
-
+            }
         }
         else {
             //IF SURVEY NOT COMPLETED, RESTART SURVEY

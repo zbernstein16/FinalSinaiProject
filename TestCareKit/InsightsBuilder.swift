@@ -45,6 +45,7 @@ class InsightsBuilder {
 //                                                                     activityIdentifier: ActivityType.TakeMedication.rawValue,
 //                                                                     startDate: queryDateRange.start,
 //                                                                     endDate: queryDateRange.end)
+        
         var operationArray:[NSOperation] = [NSOperation]()
         carePlanStore.activitiesWithCompletion()
         {
@@ -57,13 +58,23 @@ class InsightsBuilder {
                     for activity in activities
                     {
                         //TODO: Need to change this to handle ALL types of events
-                        
-                        
-                        if activity.groupIdentifier! == ActivityType.Drug.rawValue
+                        //TODO: Need to fix this
+                        if let identifier = activity.groupIdentifier
                         {
-                        operationArray.append(QueryActivityEventsOperation(store: self.carePlanStore, activityIdentifier: activity.identifier, startDate: queryDateRange.start, endDate: queryDateRange.end))
-                       
+                                if let test = CarePlanStoreManager.sharedCarePlanStoreManager.activityWithMedId(Int(identifier)!)
+                                {
+                                    if test is Drug
+                                    {
+                              
+                                        operationArray.append(QueryActivityEventsOperation(store: self.carePlanStore, activityIdentifier:activity.identifier, startDate: queryDateRange.start, endDate: queryDateRange.end))
+                                    }
+                                }
                         }
+//                        if CarePlanStoreManager.sharedCarePlanStoreManager.activityWithMedId(Int(activity.groupIdentifier?)!) is Drug
+//                        {
+//                        operationArray.append(QueryActivityEventsOperation(store: self.carePlanStore, activityIdentifier: activity.identifier, startDate: queryDateRange.start, endDate: queryDateRange.end))
+//                       
+//                        }
                     }
                 
                     let buildInsightsOperation = BuildInsightsOperation()
