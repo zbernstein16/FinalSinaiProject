@@ -10,9 +10,7 @@ class PainScale:Assessment, NSCoding {
     
 
     var typeOfPain:String!
-    var startDate:NSDateComponents!
-    
-    
+ 
     
     init(withTypeOfPain pain:String,start:NSDate,occurences:Int, medId:Int)
     {

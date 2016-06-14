@@ -12,7 +12,6 @@ class Drug:Activity, NSCoding {
     
 
     var drugName: String!
-    var startDate:NSDateComponents!
     init(withName name:String,start:NSDate,occurences:Int, medId:Int, scheduleFreqString:String?)
     {
         super.init()

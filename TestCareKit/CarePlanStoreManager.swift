@@ -127,7 +127,17 @@ class CarePlanStoreManager: NSObject {
                                 self.store.removeActivity(ockactivity, completion: {_,_ in })
                                 self.activities?.removeAtIndex(self.activities!.indexOf(activity!)!)
                                 NSKeyedArchiver.archiveRootObject((self.activities!), toFile:Constants.archivePath)
-                                //self.activities.remove
+                                
+                                //Remove Scheduled Notification from Device
+                                for notification in UIApplication.sharedApplication().scheduledLocalNotifications!
+                                {
+                                    let notificationMedId = notification.userInfo!["Med_id"] as! String
+                                    if notificationMedId == ockactivity.groupIdentifier
+                                    {
+                                        print("Deleted Notification")
+                                        UIApplication.sharedApplication().cancelLocalNotification(notification)
+                                    }
+                                }
                                 
                             }
                             
@@ -240,7 +250,7 @@ class CarePlanStoreManager: NSObject {
                         case "PainScale":
                             let painScale = PainScale(withTypeOfPain: name, start: startDate, occurences: freq, medId: medId)
                             self.store.addActivity(painScale.carePlanActivity()) {
-                                            success, error in
+                                            success, errorOrNil in
                                             if let error = errorOrNil
                                             {
                                                 fatalError(error.localizedDescription)
@@ -250,8 +260,25 @@ class CarePlanStoreManager: NSObject {
                                                 self.activities!.append(painScale)
                                                 NSKeyedArchiver.archiveRootObject(self.activities!, toFile:Constants.archivePath)
                                                 self.createNotification(activityDictionary:PatMedFreqDictionary, activity: painScale)
+                                                
                                             }
                             }
+                        case "Allergy":
+                            let allergy = Allergy(withStart: startDate, occurences: freq, medId: medId)
+                            self.store.addActivity(allergy.carePlanActivity())
+                            {
+                                success, error in
+                                if let error = errorOrNil
+                                {
+                                    fatalError(error.localizedDescription)
+                                }
+                                else
+                                {
+                                    self.activities!.append(allergy)
+                                    NSKeyedArchiver.archiveRootObject(self.activities!, toFile:Constants.archivePath)
+                                    self.createNotification(activityDictionary:PatMedFreqDictionary, activity: allergy)
+                                }
+                        }
                         default:
                             break
                     }
@@ -299,6 +326,7 @@ class CarePlanStoreManager: NSObject {
             notification.soundName = UILocalNotificationDefaultSoundName // play default sound
             notification.timeZone = NSTimeZone.systemTimeZone()
             notification.category = "alert"
+            notification.userInfo = ["Med_id":activityDict["Med_id"]!]
             UIApplication.sharedApplication().scheduleLocalNotification(notification)
             
         }

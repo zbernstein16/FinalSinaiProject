@@ -125,6 +125,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     //If object already existed, update it
                     if let item = result.items.first
                     {
+                        //If more than one adherence posts for this med id are found, they should be deleted
+                        if result.items.count > 1
+                        {
+                            for d in 1...result.items.count-1
+                            {
+                                //Deletes Excess items in case they are found
+                                let deleteItem = result.items[d]
+                                self.adherenceTable!.delete(deleteItem as! [NSObject : AnyObject], completion: nil)
+                                print("Delete Excess");
+                            }
+                        }
                         var newItem = item.mutableCopy() as! Dictionary<String,AnyObject>
                         //Update Object
                         newItem["Status_1"] = newAdherencePost["Status_1"]
@@ -252,6 +263,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         
                         if let item = result.items.first
                         {
+                            //If more than one adherence posts for this med id are found, they should be deleted
+                            if result.items.count > 1
+                            {
+                                for d in 1...result.items.count-1
+                                {
+                                    //Deletes Excess items in case they are found
+                                    let deleteItem = result.items[d]
+                                    self.adherenceTable!.delete(deleteItem as! [NSObject : AnyObject], completion: nil)
+                                    print("Delete Excess");
+                                }
+                            }
                             var newItem = item.mutableCopy() as! Dictionary<String,AnyObject>
                             //Update Object
                             newItem["Status_1"] = newAdherencePost["Status_1"]

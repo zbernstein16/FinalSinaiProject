@@ -276,10 +276,12 @@ extension MainViewController: ORKTaskViewControllerDelegate
         else { return }
         
         // Build an `OCKCarePlanEventResult` that can be saved into the `OCKCarePlanStore`.
-        let carePlanResult = assessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
+        let carePlanResults = assessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
         //let carePlanResult = sampleAssessment.buildResultForCarePlanEvent(event, taskResult: taskViewController.result)
-        self.completeEvent(event, inStore: self.storeManager.store, withResult: carePlanResult)
-        
+        for carePlanResult in carePlanResults
+        {
+            self.completeEvent(event, inStore: self.storeManager.store, withResult: carePlanResult)
+        }
         
         
         

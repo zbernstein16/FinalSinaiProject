@@ -13,6 +13,7 @@ class Activity:NSObject, ActivityProtocol
     var id:Int!
     //Schedule String will come in as "_/_/_/_/_/_/_"
     var scheduleFreqString:String?
+    var startDate:NSDateComponents!
     
     //Computer property will return array of NSNumbers only if in right format
     var scheduleFreqArray:[NSNumber]? {

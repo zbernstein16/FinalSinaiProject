@@ -22,6 +22,8 @@
 		CE0E60E51CEE32CE00846EFC /* Drug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0E60E41CEE32CE00846EFC /* Drug.swift */; };
 		CEA71BD81CE6C59800A4BAEF /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA71BD71CE6C59800A4BAEF /* ConsentViewController.swift */; };
 		CEA71BDF1CE6C59800A4BAEF /* ConsentDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA71BDE1CE6C59800A4BAEF /* ConsentDocument.swift */; };
+		CEC6A8431D0F0C5700913A13 /* AllergySurveyTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A8421D0F0C5700913A13 /* AllergySurveyTask.swift */; };
+		CEC6A8491D0F0CA200913A13 /* Allergy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A8481D0F0CA200913A13 /* Allergy.swift */; };
 		CEFF461A1CE306E900C7CCEB /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF46091CE306E800C7CCEB /* Activity.swift */; };
 		CEFF461B1CE306E900C7CCEB /* Assessment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF460A1CE306E800C7CCEB /* Assessment.swift */; };
 		CEFF461C1CE306E900C7CCEB /* BackPain.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEFF460B1CE306E800C7CCEB /* BackPain.swift */; };
@@ -124,6 +126,8 @@
 		CE0E60E41CEE32CE00846EFC /* Drug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Drug.swift; sourceTree = "<group>"; };
 		CEA71BD71CE6C59800A4BAEF /* ConsentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		CEA71BDE1CE6C59800A4BAEF /* ConsentDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentDocument.swift; sourceTree = "<group>"; };
+		CEC6A8421D0F0C5700913A13 /* AllergySurveyTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AllergySurveyTask.swift; sourceTree = "<group>"; };
+		CEC6A8481D0F0CA200913A13 /* Allergy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Allergy.swift; sourceTree = "<group>"; };
 		CEFF46091CE306E800C7CCEB /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		CEFF460A1CE306E800C7CCEB /* Assessment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assessment.swift; sourceTree = "<group>"; };
 		CEFF460B1CE306E800C7CCEB /* BackPain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackPain.swift; sourceTree = "<group>"; };
@@ -230,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				CE0E60E41CEE32CE00846EFC /* Drug.swift */,
+				CEC6A8481D0F0CA200913A13 /* Allergy.swift */,
 				CE052B871CF363340041D88F /* PainScale.swift */,
 			);
 			name = "Activity Types";
@@ -282,6 +287,7 @@
 				CEFF46141CE306E900C7CCEB /* NameSurvey.swift */,
 				CEFF46181CE306E900C7CCEB /* TakeMedication.swift */,
 				CEFF46191CE306E900C7CCEB /* Tower.swift */,
+				CEC6A8421D0F0C5700913A13 /* AllergySurveyTask.swift */,
 			);
 			name = "Specific Activities";
 			sourceTree = "<group>";
@@ -462,6 +468,7 @@
 				CEFF462A1CE306E900C7CCEB /* Tower.swift in Sources */,
 				CE0242561CF38C81008145C6 /* Constants.swift in Sources */,
 				CEFF461F1CE306E900C7CCEB /* ChoiceSurvey.swift in Sources */,
+				CEC6A8431D0F0C5700913A13 /* AllergySurveyTask.swift in Sources */,
 				CEFF461C1CE306E900C7CCEB /* BackPain.swift in Sources */,
 				CEFF461E1CE306E900C7CCEB /* CarePlanStoreManager.swift in Sources */,
 				A2BD20971AC8A731007F7181 /* QSTodoDataModel.xcdatamodeld in Sources */,
@@ -471,6 +478,7 @@
 				CEFF46241CE306E900C7CCEB /* MainViewController.swift in Sources */,
 				CE052B881CF363340041D88F /* PainScale.swift in Sources */,
 				CEFF46251CE306E900C7CCEB /* NameSurvey.swift in Sources */,
+				CEC6A8491D0F0CA200913A13 /* Allergy.swift in Sources */,
 				CE06D5A61CE6235B00BB233D /* ConsentTask.swift in Sources */,
 				CEFF46261CE306E900C7CCEB /* CustomExtensions.swift in Sources */,
 				CEFF46491CE308C000C7CCEB /* QueryActivityEventsOperation.swift in Sources */,
