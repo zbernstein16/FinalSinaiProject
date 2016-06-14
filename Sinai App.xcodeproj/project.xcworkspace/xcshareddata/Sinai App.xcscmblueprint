@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "4D17CFB8EEDCF7377CEC52B32C8E53348C8AE085",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "A7348A0C806E2C48F9B25D7CEAE8206BA748F519" : 0,
+    "4D17CFB8EEDCF7377CEC52B32C8E53348C8AE085" : 0,
+    "9206CEF0D15D91FA37BC9E5819ECFFF5813C4E26" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "690D07E6-3D3C-456A-91CF-21D99AAC5E43",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "A7348A0C806E2C48F9B25D7CEAE8206BA748F519" : "..\/..\/Downloads\/CareKit-master",
+    "4D17CFB8EEDCF7377CEC52B32C8E53348C8AE085" : "Sinai%20App\/",
+    "9206CEF0D15D91FA37BC9E5819ECFFF5813C4E26" : "..\/..\/Downloads\/ResearchKit-master%203"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Sinai App",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Sinai App.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/zbernstein16\/FinalSinaiProject.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "4D17CFB8EEDCF7377CEC52B32C8E53348C8AE085"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/zbernstein16\/ResearchKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "9206CEF0D15D91FA37BC9E5819ECFFF5813C4E26"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/zbernstein16\/CareKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A7348A0C806E2C48F9B25D7CEAE8206BA748F519"
+    }
+  ]
+}
